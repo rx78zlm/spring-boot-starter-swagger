@@ -61,6 +61,9 @@ public class BaseSwaggerConfiguration {
         if (!Strings.isNullOrEmpty(docketInfo.getDirectModelSubstitutes())) {
             setDirectModelSubstitutes(docket, docketInfo.getDirectModelSubstitutes());
         }
+        if (!Strings.isNullOrEmpty(docketInfo.getGenericModelSubstitutes())) {
+            setGenericModelSubstitutes(docket, docketInfo.getGenericModelSubstitutes());
+        }
         return docket;
     }
 
@@ -71,6 +74,13 @@ public class BaseSwaggerConfiguration {
             Class clazz = ClassUtils.forName(className, null);
             Class withClazz = ClassUtils.forName(with, null);
             docket.directModelSubstitute(clazz, withClazz);
+        }
+    }
+
+    private void setGenericModelSubstitutes(Docket docket, String genericModelSubstitutes) throws ClassNotFoundException {
+        List<String> classes = Splitter.on(',').splitToList(genericModelSubstitutes);
+        for (String className : classes) {
+            docket.genericModelSubstitutes(ClassUtils.forName(className, null));
         }
     }
 

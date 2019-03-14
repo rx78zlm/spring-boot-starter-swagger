@@ -77,4 +77,9 @@ public class DocketInfo {
      */
     private String directModelSubstitutes;
 
+    /**
+     * 需要进行转换的泛型类型，多个用逗号分割
+     */
+    private String genericModelSubstitutes;
+
 }
