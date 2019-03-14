@@ -1,5 +1,6 @@
 package com.spring4all.swagger;
 
+import com.spring4all.swagger.condition.ConditionalOnPropertyNotEmpty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -12,7 +13,7 @@ import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfi
  * My blog： http://blog.didispace.com
  */
 @Configuration
-@ConditionalOnProperty(name = "swagger.enabled", matchIfMissing = true)
+@ConditionalOnPropertyNotEmpty(name = "swagger.beanName")
 @Import({
         Swagger2DocumentationConfiguration.class,
         BeanValidatorPluginsConfiguration.class
