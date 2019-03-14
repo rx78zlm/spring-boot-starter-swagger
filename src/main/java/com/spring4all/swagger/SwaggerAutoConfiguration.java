@@ -68,7 +68,7 @@ public class SwaggerAutoConfiguration extends BaseSwaggerConfiguration implement
     @ConditionalOnMissingBean
     @ConditionalOnBean(UiConfiguration.class)
     @ConditionalOnPropertyNotEmpty(name = "swagger.beanName")
-    public List<Docket> createRestApi(SwaggerProperties swaggerProperties) {
+    public List<Docket> createRestApi(SwaggerProperties swaggerProperties) throws ClassNotFoundException {
         ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
         List<Docket> docketList = new LinkedList<>();
 

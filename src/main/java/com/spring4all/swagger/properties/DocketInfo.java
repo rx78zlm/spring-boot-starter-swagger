@@ -72,4 +72,9 @@ public class DocketInfo {
      */
     private String pathMapping;
 
+    /**
+     * 对象转换,格式：对象-目标，多个用逗号分割
+     */
+    private String directModelSubstitutes;
+
 }

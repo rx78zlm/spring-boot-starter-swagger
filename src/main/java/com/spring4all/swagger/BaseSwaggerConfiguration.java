@@ -2,10 +2,13 @@ package com.spring4all.swagger;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.spring4all.swagger.properties.DocketInfo;
 import com.spring4all.swagger.properties.GlobalOperationParameter;
 import com.spring4all.swagger.properties.GlobalResponseMessageBody;
 import com.spring4all.swagger.properties.SwaggerProperties;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.*;
@@ -27,7 +30,7 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 public class BaseSwaggerConfiguration {
 
-    protected Docket configPath(DocketInfo docketInfo, ApiSelectorBuilder apiSelectorBuilder) {
+    protected Docket configPath(DocketInfo docketInfo, ApiSelectorBuilder apiSelectorBuilder) throws ClassNotFoundException {
         // base-path处理
         // 当没有配置任何path的时候，解析/**
         if (docketInfo.getBasePath().isEmpty()) {
@@ -55,7 +58,20 @@ public class BaseSwaggerConfiguration {
         Class<?>[] array = new Class[docketInfo.getIgnoredParameterTypes().size()];
         Class<?>[] ignoredParameterTypes = docketInfo.getIgnoredParameterTypes().toArray(array);
         docket.ignoredParameterTypes(ignoredParameterTypes);
+        if (!Strings.isNullOrEmpty(docketInfo.getDirectModelSubstitutes())) {
+            setDirectModelSubstitutes(docket, docketInfo.getDirectModelSubstitutes());
+        }
         return docket;
+    }
+
+    private void setDirectModelSubstitutes(Docket docket, String directModelSubstitutes) throws ClassNotFoundException {
+        Map<String, String> map = Splitter.on(',').withKeyValueSeparator('-').split(directModelSubstitutes);
+        for (String className : map.keySet()) {
+            String with = map.get(className);
+            Class clazz = ClassUtils.forName(className, null);
+            Class withClazz = ClassUtils.forName(with, null);
+            docket.directModelSubstitute(clazz, withClazz);
+        }
     }
 
     protected ApiInfo createApiInfo(DocketInfo defaultDocketInfo, DocketInfo docketInfo) {
